@@ -17,7 +17,7 @@
       <div class="viewport">
         <div class="wrapper">
           <div class="item">
-            /* slide content */
+            <!-- slide content -->
           </div>
         </div>
       </div>
