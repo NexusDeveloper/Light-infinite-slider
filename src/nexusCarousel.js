@@ -134,6 +134,9 @@ NexusCarousel.prototype.__doScroll=function(direction,duration){
 		elNum=((elWidth-scrL<elWidth/2)?2:1),//How many elems do need to scroll
 		speed=!!duration?duration:((elWidth*elNum-scrL)*this.config.duration/elWidth);
 
+	if($vPort.get(0).__scrollTimeOut)
+		clearTimeout($vPort.get(0).__scrollTimeOut);
+
 	if(direction){//ltr
 		$vPort.stop(true).animate({
 			scrollLeft:elWidth*elNum
@@ -161,7 +164,7 @@ NexusCarousel.prototype.__doScroll=function(direction,duration){
 		}).animate({
 			scrollLeft:0
 		},speed,'linear',function(){
-			setTimeout(function(){
+			$vPort.get(0).__scrollTimeOut=setTimeout(function(){
 				_class.__doScroll();
 			},_class.config.delay);
 		});
