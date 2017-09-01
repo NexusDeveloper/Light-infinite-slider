@@ -1,0 +1,98 @@
+.nexus-carousel{
+	position:relative;
+}
+.nexus-carousel .viewport{
+	width:100%;
+	overflow-x:hidden;
+}
+.nexus-carousel .viewport>.wrapper{
+	overflow:hidden;
+	position:relative;
+	display:inline-block;
+	width:100000px;
+	background:#FFF;
+	-webkit-box-shadow:0 0 5px 1px rgba(0,0,0,.5);
+	-moz-box-shadow:0 0 5px 1px rgba(0,0,0,.5);
+	box-shadow:0 0 5px 1px rgba(0,0,0,.5);
+}
+
+.nexus-carousel .viewport .item{
+	display:inline-block;
+	width:530px;
+	overflow:hidden;
+	float:left;
+}
+.nexus-carousel .viewport .item [class^="col-xs"]{
+	padding:0;
+	margin:0;
+}
+.nexus-carousel .viewport .item .link{
+	display:inline-block;
+	width:100%;
+	overflow:hidden;
+	position:relative;
+	margin:0 0 -6px;
+}
+.nexus-carousel .viewport .item .wrapper{}
+.nexus-carousel .viewport .item .image{}
+.nexus-carousel .viewport .item .info{
+	padding:20px;
+}
+.nexus-carousel .viewport .item .info .date{
+	font-family:'KelsonSansLight';
+	font-size:14px;
+	color:#9596a1;
+	margin:0 0 20px;
+}
+.nexus-carousel .viewport .item .info .title{
+	font-family:'KelsonSansRegular';
+	font-size:24px;
+	color:#666;
+}
+.nexus-carousel .viewport .item .info .detail{
+	margin-top:20px;
+}
+.nexus-carousel .viewport .item .info .detail span{
+	font-family:'KelsonSansBold';
+	color:#AF9373;
+	text-transform:uppercase;
+	border-bottom:dotted 1px;
+}
+.nexus-carousel .viewport .item .info .detail span:hover{
+	border-bottom-style:solid;
+}
+.nexus-carousel .viewport .item .category-title{
+	font-family:'KelsonSansLight';
+	font-size:16px;
+	text-transform:uppercase;
+	text-align:center;
+	padding:12px 10px 9px;
+	color:#666;
+}
+.nexus-carousel .viewport .item .category-title.odd{
+	background:#EFE9E3;
+}
+
+.nexus-carousel .viewport .item .image img{
+	max-width:100%;
+	max-height:100%;
+}
+
+.nexus-carousel.partners .next,
+.nexus-carousel.partners .prev{
+	position:absolute;
+	top:0;
+	bottom:0;
+	margin:auto;
+	width:10px;
+	height:17px;
+	cursor:pointer;
+}
+.nexus-carousel.partners .next{
+	background:url('PATH') no-repeat center;
+	right:30px;
+}
+.nexus-carousel.partners .prev{
+	background:url('PATH') no-repeat center;
+	left:30px;
+}
