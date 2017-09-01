@@ -60,10 +60,8 @@ NexusCarousel.prototype.init=function(){
 	});
 
 	if(this.config.respondMouse)
-		$wrapper.on('mouseenter',function(){
-			$(this).parents('.nexus-carousel').get(0).__NexusCarousel.scrollStart();
-		}).on('mouseleave',function(){
-			$(this).parents('.nexus-carousel').get(0).__NexusCarousel.scrollStop();
+		$wrapper.on('mouseenter mouseleave',function(e){
+			$(this).parents('.nexus-carousel').get(0).__NexusCarousel['scroll'+(e.type=='mouseenter'?'Start':'Stop')]();
 		});
 
 	if(this.config.autoScroll)
