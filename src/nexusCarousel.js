@@ -144,7 +144,7 @@ NexusCarousel.prototype.__doScroll=function(direction,duration){
 			}
 
 			$vPort.scrollLeft(0);
-			setTimeout(function(){
+			$vPort.get(0).__scrollTimeOut=setTimeout(function(){
 				_class.__doScroll();
 			},_class.config.delay);
 		});
