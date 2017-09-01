@@ -44,10 +44,6 @@ NexusCarousel.prototype.getElements=function(){
 NexusCarousel.prototype.init=function(){
 	this.$elements=this.getElements();
 
-	this.$elements.each(function(){
-		$(this).attr('data-index',$(this).index());
-	});
-
 	var $wrapper=this.$node.find('.viewport>.wrapper');
 	$wrapper.css({
 		height:function(){
