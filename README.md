@@ -1,14 +1,14 @@
 # Light infinite slider
 
-HTML
+```HTML
 <div class="nexus-carousel partners"
-				     data-respondMouse="false"
-				     data-delay="1500"
-				     data-duration="1500"
-				     data-autoScroll="false"
-				     data-controls="true"
-				     data-nextSelector=".next"
-				     data-prevSelector=".prev"
+     data-respondMouse="false"
+     data-delay="1500"
+     data-duration="1500"
+     data-autoScroll="false"
+     data-controls="true"
+     data-nextSelector=".next"
+     data-prevSelector=".prev"
 >
   <div>
     <div class="bg-white">
@@ -24,8 +24,10 @@ HTML
     </div>
   </div>
 </div>
+```
 
-JS
+```JS
 $('.nexus-carousel').each(function(){
   new NexusCarousel(this);
 });
+```
