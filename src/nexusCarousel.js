@@ -3,6 +3,7 @@ function NexusCarousel(node,config){
 	this.$node=$(node);
 	this.config=$.extend({},{
 		respondMouse:true,
+		respondTouch:true,
 		duration:2000,
 		delay:0,
 		direction:'right',
@@ -39,7 +40,7 @@ function NexusCarousel(node,config){
 	this.init();
 };
 NexusCarousel.prototype.getElements=function(){
-	return this.$node.find('.wrapper .item');
+	return this.$elements=this.$node.find('.wrapper .item');
 };
 NexusCarousel.prototype.init=function(){
 	this.$elements=this.getElements();
@@ -61,7 +62,8 @@ NexusCarousel.prototype.init=function(){
 
 	if(this.config.respondMouse)
 		$wrapper.on('mouseenter mouseleave',function(e){
-			$(this).parents('.nexus-carousel').get(0).__NexusCarousel['scroll'+(e.type=='mouseenter'?'Start':'Stop')]();
+			if(!_class.__isTouch)
+				$(this).parents('.nexus-carousel').get(0).__NexusCarousel['scroll'+(e.type=='mouseenter'?'Start':'Stop')]();
 		});
 
 	if(this.config.autoScroll)
@@ -76,6 +78,9 @@ NexusCarousel.prototype.init=function(){
 			_class.prev();
 		});
 	}
+
+	if(this.config.respondTouch)
+		this.initTouch();
 };
 NexusCarousel.prototype.scrolling=false;
 NexusCarousel.prototype.scrollStart=function(){
@@ -112,8 +117,9 @@ NexusCarousel.prototype.prev=function(){
 
 	return this;
 };
+NexusCarousel.prototype.__scrollTimeOut=false;
 NexusCarousel.prototype.__doScroll=function(direction,duration){
-	if(!this.scrolling && !this.config.autoScroll)
+	if(!this.scrolling && !this.config.autoScroll && !this.__isTouch)
 		return this;
 
 	direction=(['left','right']).indexOf(direction)==-1?this.config.direction:direction;
@@ -126,10 +132,10 @@ NexusCarousel.prototype.__doScroll=function(direction,duration){
 		scrL=$vPort.scrollLeft(),
 		elWidth=$elements.eq(0).outerWidth(true),
 		elNum=((elWidth-scrL<elWidth/2)?2:1),//How many elems do need to scroll
-		speed=!!duration?duration:((elWidth*elNum-scrL)*this.config.duration/elWidth);
+		speed=(!!duration || duration===0)?duration:((elWidth*elNum-scrL)*this.config.duration/elWidth);
 
-	if($vPort.get(0).__scrollTimeOut)
-		clearTimeout($vPort.get(0).__scrollTimeOut);
+	if(_class.__scrollTimeOut)
+		clearTimeout(_class.__scrollTimeOut);
 
 	if(direction){//ltr
 		$vPort.stop(true).animate({
@@ -142,7 +148,7 @@ NexusCarousel.prototype.__doScroll=function(direction,duration){
 			}
 
 			$vPort.scrollLeft(0);
-			$vPort.get(0).__scrollTimeOut=setTimeout(function(){
+			_class.__scrollTimeOut=setTimeout(function(){
 				_class.__doScroll();
 			},_class.config.delay);
 		});
@@ -158,11 +164,76 @@ NexusCarousel.prototype.__doScroll=function(direction,duration){
 		}).animate({
 			scrollLeft:0
 		},speed,'linear',function(){
-			$vPort.get(0).__scrollTimeOut=setTimeout(function(){
-				_class.__doScroll();
-			},_class.config.delay);
+			if(!_class.__isTouch)
+				_class.__scrollTimeOut=setTimeout(function(){
+					_class.__doScroll();
+				},_class.config.delay);
+			else
+				_class.__scrollTimeOut=false;
 		});
 	};
+
+	return this;
+};
+
+NexusCarousel.prototype.__isTouch=false;
+NexusCarousel.prototype.initTouch=function(){
+	var self=this,
+		$viewport=self.$node.find('.viewport'),
+		$wrapper=$viewport.find('>.wrapper'),
+		elWidth=this.getElements().eq(0).outerWidth(true),
+		get_event=function(event){
+			if(!!event.originalEvent && !!event.originalEvent.touches && event.originalEvent.touches.length>0){
+				return event.originalEvent.touches[0];
+			}else if(!!event.originalEvent && !!event.originalEvent.changedTouches && event.originalEvent.changedTouches.length>0){
+				return event.originalEvent.changedTouches[0];
+			}
+
+			return false;
+		};
+
+	if(!this.__touchPos)
+		this.__touchPos={x:0,y:0};
+
+	$viewport.on('touchstart touchend',function(e){
+		e.stopPropagation();
+		self.__isTouch=e.type=='touchstart';
+		e=get_event(e);
+
+		self.__touchPos={
+			x:e.clientX||0,
+			y:e.clientY||0
+		};
+	}).on('touchmove',function(e){
+		e=get_event(e);
+
+		var $viewport=self.$node.find('.viewport'),
+			dragValue=self.__touchPos.x-(e.clientX||0),
+			scrLeft=$viewport.scrollLeft(),
+			newScrLeft=scrLeft+dragValue;
+
+		if(newScrLeft<0){//direction: right
+			//Крийний правый в начало
+			$viewport.scrollLeft(elWidth);
+			self.getElements().last().clone().prependTo($wrapper);
+			self.$elements.last().remove();
+			newScrLeft+=elWidth;
+		}else if(newScrLeft+elWidth>$wrapper.width()){//left
+			//Крийний левый в конец
+			$viewport.scrollLeft($wrapper.width()-elWidth);
+			self.getElements().first().clone().appendTo($wrapper);
+			self.$elements.first().remove();
+			newScrLeft-=elWidth;
+		}
+
+		$viewport.scrollLeft(newScrLeft);
+
+
+		self.__touchPos={
+			x:e.clientX||0,
+			y:e.clientY||0
+		};
+	});
 
 	return this;
 };
