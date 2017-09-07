@@ -45,7 +45,9 @@ NexusCarousel.prototype.getElements=function(){
 NexusCarousel.prototype.init=function(){
 	this.$elements=this.getElements();
 
-	var $wrapper=this.$node.find('.viewport>.wrapper');
+	var $wrapper=this.$node.find('.viewport>.wrapper'),
+		_class=this;
+
 	$wrapper.css({
 		height:function(){
 				var v=0;
@@ -63,14 +65,13 @@ NexusCarousel.prototype.init=function(){
 	if(this.config.respondMouse)
 		$wrapper.on('mouseenter mouseleave',function(e){
 			if(!_class.__isTouch)
-				$(this).parents('.nexus-carousel').get(0).__NexusCarousel['scroll'+(e.type=='mouseenter'?'Start':'Stop')]();
+				_class['scroll'+(e.type=='mouseenter'?'Start':'Stop')]();
 		});
 
 	if(this.config.autoScroll)
 		this.__doScroll();
 
 	if(this.config.controls){
-		var _class=this;
 		this.$node.find(this.config.nextSelector).on('click',function(){
 			_class.next();
 		});
@@ -175,7 +176,6 @@ NexusCarousel.prototype.__doScroll=function(direction,duration){
 
 	return this;
 };
-
 NexusCarousel.prototype.__isTouch=false;
 NexusCarousel.prototype.initTouch=function(){
 	var self=this,
@@ -213,13 +213,11 @@ NexusCarousel.prototype.initTouch=function(){
 			newScrLeft=scrLeft+dragValue;
 
 		if(newScrLeft<0){//direction: right
-			//Крийний правый в начало
 			$viewport.scrollLeft(elWidth);
 			self.getElements().last().clone().prependTo($wrapper);
 			self.$elements.last().remove();
 			newScrLeft+=elWidth;
 		}else if(newScrLeft+elWidth>$wrapper.width()){//left
-			//Крийний левый в конец
 			$viewport.scrollLeft($wrapper.width()-elWidth);
 			self.getElements().first().clone().appendTo($wrapper);
 			self.$elements.first().remove();
