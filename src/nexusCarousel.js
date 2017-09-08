@@ -223,7 +223,7 @@ NexusCarousel.prototype.initTouch=function(){
 			dragValue=start_pos_x-(e.clientX||0);
 
 		$viewport.animate({
-			scrollLeft:(dragValue>0 && distance>elWidth/4)?(scrLeft+elWidth-distance):
+			scrollLeft:(dragValue>0)?((distance>elWidth/4)?(scrLeft+elWidth-distance):(scrLeft-distance)):
 				((dragValue<0 && Math.abs(dragValue)>elWidth/4)?(scrLeft-distance):(scrLeft+elWidth-distance))
 		},300);
 	}).on('touchmove',function(e){
@@ -239,7 +239,7 @@ NexusCarousel.prototype.initTouch=function(){
 			self.getElements().last().clone().prependTo($wrapper);
 			self.$elements.last().remove();
 			newScrLeft+=elWidth;
-		}else if(newScrLeft+elWidth>$wrapper.width()){//left
+		}else if(newScrLeft+$(window).width()>$wrapper.width()){//left
 			$viewport.scrollLeft($wrapper.width()-elWidth);
 			self.getElements().first().clone().appendTo($wrapper);
 			self.$elements.first().remove();
